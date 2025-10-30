@@ -520,6 +520,7 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
             flex-shrink: 0;
+            position: relative; /* For positioning info icon */
         }
         
         .touroption-card:hover {
@@ -538,6 +539,17 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             font-weight: 600;
             color: var(--primary-color);
             margin: 0 0 4px 0;
+        }
+        
+        .touroption-id-badge {
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 400;
+            background-color: #6c757d;
+            color: white;
+            white-space: nowrap;
+            margin-left: 8px;
         }
         
         .touroption-description {
@@ -644,6 +656,106 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             color: #666;
             line-height: 1.3;
         }
+
+        .transfer-details-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .transfer-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .transfer-detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .transfer-detail-value {
+            color: #6c757d;
+        }
+
+        .transfer-id-badge {
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background-color: #6f42c1;
+            color: white;
+            margin-left: 8px;
+        }
+
+        .availability-badge {
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background-color: #28a745;
+            color: white;
+            margin-left: 8px;
+        }
+
+        .availability-badge.unavailable {
+            background-color: #dc3545;
+        }
+
+        .availability-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .book-button {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .book-button:hover {
+            background-color: #0056b3;
+        }
+
+        .book-button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .transfer-pricing {
+            background-color: #e8f5e8;
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .pricing-label {
+            font-weight: 600;
+            color: #155724;
+        }
+
+        .pricing-value {
+            color: #155724;
+        }
         .modal-info-icon {
             width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-color);
             display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
@@ -667,10 +779,27 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             transition: background-color 0.2s;
         }
         
-        .view-toggle a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
+            .view-toggle a.active {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            /* Header Cancel Booking link styling */
+            #cancel-booking-link {
+                padding: 6px 12px;
+                border-radius: 6px;
+                border: 1px solid #dc3545;
+                color: #dc3545;
+                background: transparent;
+                text-decoration: none;
+                font-weight: 600;
+                transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+            }
+            #cancel-booking-link:hover {
+                background: #dc3545;
+                color: #fff;
+                box-shadow: 0 2px 8px var(--shadow-color);
+            }
         
         .tours-grid {
             display: grid;
@@ -839,6 +968,51 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             background-color: #8e44ad;
         }
         
+        /* Tour ID badges */
+        .tour-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .tour-id-badge {
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 400;
+            background-color: #6c757d;
+            color: white;
+            white-space: nowrap;
+        }
+        
+        .modal-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .modal-tour-id-badge {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #495057;
+            color: white;
+            white-space: nowrap;
+        }
+        
+        .modal-tour-date-badge {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #28a745;
+            color: white;
+            white-space: nowrap;
+        }
+        
         .info-icon {
             position: absolute;
             bottom: 10px;
@@ -999,9 +1173,14 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
 <body>
     <div class="container">
         <header>
-            <div>
-                <h1>Rayana Tours</h1>
-                <p class="tour-count">Showing <span id="filtered-count"><?php echo $totalTours; ?></span> of <?php echo $totalTours; ?> Tours</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                <div>
+                    <h1>Rayana Tours</h1>
+                    <p class="tour-count">Showing <span id="filtered-count"><?php echo $totalTours; ?></span> of <?php echo $totalTours; ?> Tours</p>
+                </div>
+                <div>
+                    <a href="#" id="cancel-booking-link">Cancel Booking</a>
+                </div>
             </div>
             
             <div class="controls">
@@ -1080,7 +1259,12 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                     </div>
                     
                     <div class="tour-details">
-                        <h3 class="tour-name"><?php echo htmlspecialchars($tour['tourName'] ?? 'Unknown Tour'); ?></h3>
+                        <div class="tour-name-row">
+                            <h3 class="tour-name"><?php echo htmlspecialchars($tour['tourName'] ?? 'Unknown Tour'); ?></h3>
+                            <?php if (isset($tour['tourId'])): ?>
+                                <span class="tour-id-badge">ID: <?php echo htmlspecialchars($tour['tourId']); ?></span>
+                            <?php endif; ?>
+                        </div>
                         <p class="tour-city"><?php echo htmlspecialchars($tour['cityName'] ?? 'Unknown City'); ?></p>
                         
                         <div class="tour-meta">
@@ -1149,7 +1333,11 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
         <div id="details-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
             <div class="modal">
                 <div class="modal-header">
-                    <h2 id="modal-title">Tour Details</h2>
+                    <div class="modal-title-row">
+                        <h2 id="modal-title">Tour Details</h2>
+                        <span class="modal-tour-id-badge" id="modal-tour-id"></span>
+                        <span class="modal-tour-date-badge" id="modal-tour-date"></span>
+                    </div>
                     <div class="modal-actions">
                         <div class="modal-tooltip">
                             <button class="modal-info-icon" id="modal-info" aria-label="View request/response">i</button>
@@ -1454,15 +1642,23 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                     if (contractIdRaw && !isNaN(Number(contractIdRaw))) {
                         payload.ContractId = Number(contractIdRaw);
                     }
-                    openDetailsModal(payload);
+                    
+                    // Create separate payload for Tour Options API with lowercase property names
+                    const tourOptionsPayload = {
+                        tourId: Number(tourId),
+                        contractId: contractIdRaw && !isNaN(Number(contractIdRaw)) ? Number(contractIdRaw) : null
+                    };
+                    openDetailsModal(payload, tourOptionsPayload);
                 });
             });
         }
 
-        async function openDetailsModal(payload) {
+        async function openDetailsModal(payload, tourOptionsPayload) {
             ensureJSONRenderer();
             const overlay = document.getElementById('details-modal');
             const titleEl = document.getElementById('modal-title');
+            const tourIdBadge = document.getElementById('modal-tour-id');
+            const tourDateBadge = document.getElementById('modal-tour-date');
             const bannerEl = document.getElementById('modal-banner');
             const shortEl = document.getElementById('modal-short-content');
             const keyInfoEl = document.getElementById('modal-keyinfo-content');
@@ -1487,6 +1683,8 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
 
             // Reset content
             titleEl.textContent = 'Loading...';
+            tourIdBadge.textContent = '';
+            tourDateBadge.textContent = '';
             bannerEl.innerHTML = '';
             shortEl.innerHTML = '';
             keyInfoEl.innerHTML = '';
@@ -1579,6 +1777,16 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
 
                 // Title
                 titleEl.textContent = detail.tourName || 'Tour Details';
+                
+                // Tour ID badge
+                if (payload.TourId) {
+                    tourIdBadge.textContent = `ID: ${payload.TourId}`;
+                }
+
+                // Tour date badge
+                if (payload.TravelDate) {
+                    tourDateBadge.textContent = `Date: ${payload.TravelDate}`;
+                }
 
                 // Banner slider
                 const images = Array.isArray(detail.tourImages) ? detail.tourImages : [];
@@ -1841,8 +2049,15 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                 }
 
                 // Load Tour Options
-                if (payload.tourId && payload.contractId) {
-                    loadTourOptions(payload.tourId, payload.contractId);
+                console.log('Payload for tour options:', tourOptionsPayload);
+                if (tourOptionsPayload && tourOptionsPayload.tourId && tourOptionsPayload.contractId) {
+                    console.log('Calling loadTourOptions with tourId:', tourOptionsPayload.tourId, 'contractId:', tourOptionsPayload.contractId);
+                    // Add a small delay to ensure the modal is fully rendered before making the API call
+                    setTimeout(() => {
+                        loadTourOptions(tourOptionsPayload.tourId, tourOptionsPayload.contractId);
+                    }, 100);
+                } else {
+                    console.log('Missing tourId or contractId in tourOptionsPayload:', tourOptionsPayload);
                 }
             } catch (e) {
                 console.error('Details fetch error', e);
@@ -1889,6 +2104,9 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             };
             document.addEventListener('keydown', __modalKeyHandler);
             window.__modalKeyHandler = __modalKeyHandler;
+            
+            // Dispatch modalOpened event to trigger auto-load of pricing and availability
+            document.dispatchEvent(new CustomEvent('modalOpened'));
         }
 
         function closeDetailsModal() {
@@ -2081,6 +2299,80 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                 });
             });
 
+            // Add event listeners for tour option info icons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('info-icon') && e.target.closest('.touroption-card')) {
+                    const card = e.target.closest('.touroption-card');
+                    const tooltip = card.querySelector('.tooltip');
+                    if (card && tooltip) {
+                        toggleTooltip(card, e.target, tooltip);
+                    }
+                }
+            });
+
+            // Add event listeners for modal info icons (transfer and availability) - tooltip only, no API calls
+            document.addEventListener('click', function(e) {
+                const infoBtn = e.target.closest('.modal-info-icon');
+                if (infoBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const container = infoBtn.closest('.transfer-pricing, .availability-container, .availability-badge, .pricing-section, .touroption-card, .tour-list-item, .card, .modal-section');
+                    const tooltipBox = document.getElementById('modal-tooltip-box');
+                    const tooltipContent = document.getElementById('modal-tooltip-content');
+                    if (container && tooltipBox && tooltipContent) {
+                        // Toggle off if already visible
+                        if (tooltipBox.classList.contains('visible') && infoBtn.getAttribute('aria-expanded') === 'true') {
+                            tooltipBox.classList.remove('visible');
+                            tooltipBox.setAttribute('aria-hidden', 'true');
+                            infoBtn.setAttribute('aria-expanded', 'false');
+                            return;
+                        }
+                        // Prefer nearest element that has stored data
+                        const sourceEl = container.querySelector('[data-response]') || container.querySelector('.availability-badge[data-response]') || container;
+                        const requestData = sourceEl.getAttribute('data-request');
+                        const responseData = sourceEl.getAttribute('data-response');
+                        const endpoint = infoBtn.getAttribute('data-endpoint');
+                        const method = infoBtn.getAttribute('data-method');
+
+                        // Populate tooltip content
+                        tooltipContent.innerHTML = '';
+                        const endpointDiv = document.createElement('div');
+                        endpointDiv.innerHTML = `<span class="json-key">Endpoint:</span> ${method} ${endpoint}`;
+                        tooltipContent.appendChild(endpointDiv);
+
+                        if (requestData) {
+                            const reqDiv = document.createElement('div');
+                            reqDiv.innerHTML = '<span class="json-key">Request:</span>';
+                            renderJSONTree(JSON.parse(requestData), reqDiv);
+                            tooltipContent.appendChild(reqDiv);
+                        }
+
+                        if (responseData) {
+                            const respDiv = document.createElement('div');
+                            respDiv.innerHTML = '<span class="json-key">Response:</span>';
+                            renderJSONTree(JSON.parse(responseData), respDiv);
+                            tooltipContent.appendChild(respDiv);
+                        }
+
+                        // Show tooltip
+                        tooltipBox.classList.add('visible');
+                        tooltipBox.setAttribute('aria-hidden', 'false');
+                        infoBtn.setAttribute('aria-expanded', 'true');
+
+                        // Close tooltip on outside click
+                        const onDocClick = (event) => {
+                            if (!tooltipBox.contains(event.target) && event.target !== infoBtn) {
+                                tooltipBox.classList.remove('visible');
+                                tooltipBox.setAttribute('aria-hidden', 'true');
+                                infoBtn.setAttribute('aria-expanded', 'false');
+                                document.removeEventListener('click', onDocClick);
+                            }
+                        };
+                        setTimeout(() => document.addEventListener('click', onDocClick), 0);
+                    }
+                }
+            });
+
             // Close all tooltips on Escape
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
@@ -2096,8 +2388,10 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
 
         // Tour Options API Functions
         async function fetchTourOptions(tourId, contractId) {
+            console.log('Fetching tour options for tourId:', tourId, 'contractId:', contractId);
             try {
-                const response = await fetch('https://sandbox.raynatours.com/api/Tour/touroptionstaticdata', {
+                console.log('Making API request to staticDetailsOptions_proxy.php with payload:', {tourId, contractId});
+            const response = await fetch('staticDetailsOptions_proxy.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2108,11 +2402,31 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                     })
                 });
 
+                console.log('API Response status:', response.status);
+                
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error! status:', response.status, 'response:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log('API Response data:', data);
+                
+                // Store response data for tooltips
+                setTimeout(() => {
+                    document.querySelectorAll('.touroption-card').forEach((card, index) => {
+                        const optionData = data.touroption && data.touroption[index] ? data.touroption[index] : null;
+                        if (optionData) {
+                            card.setAttribute('data-response', JSON.stringify(data));
+                            card.setAttribute('data-request', JSON.stringify({ tourId, contractId }));
+                            card.setAttribute('data-endpoint', 'staticDetailsOptions_proxy.php');
+                            card.setAttribute('data-method', 'POST');
+                            card.setAttribute('data-timestamp', new Date().toISOString());
+                        }
+                    });
+                }, 100);
+                
                 return data.result;
             } catch (error) {
                 console.error('Error fetching tour options:', error);
@@ -2120,9 +2434,107 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             }
         }
 
-        function renderTourOptions(tourOptionsData) {
-            const container = document.querySelector('.touroptions-content');
+        // Helper function to get correct proxy URL
+        function getProxyUrl(proxyFile) {
+            // Use relative path for most cases
+            return proxyFile;
+        }
+
+        // New API function to fetch tour option details with pricing
+        async function fetchTourOptionDetails(tourId, contractId, travelDate, noOfAdult = 1, noOfChild = 0, noOfInfant = 0) {
+            console.log('Fetching tour option details for tourId:', tourId, 'contractId:', contractId, 'travelDate:', travelDate);
+            try {
+                const response = await fetch(getProxyUrl('touroption_proxy.php'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tourId: parseInt(tourId),
+                        contractId: parseInt(contractId),
+                        travelDate: travelDate,
+                        noOfAdult: parseInt(noOfAdult),
+                        noOfChild: parseInt(noOfChild),
+                        noOfInfant: parseInt(noOfInfant)
+                    })
+                });
+
+                console.log('Tour Option Details API Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error! status:', response.status, 'response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Tour Option Details API Response data:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching tour option details:', error);
+                return null;
+            }
+        }
+
+        // New API function to check availability
+        async function checkAvailability(tourId, tourOptionId, travelDate, transferId, adult = 1, child = 0, infant = 0, contractId = 300) {
+            console.log('Checking availability for tourId:', tourId, 'tourOptionId:', tourOptionId, 'transferId:', transferId);
+            try {
+                const response = await fetch(getProxyUrl('availability_proxy.php'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tourId: parseInt(tourId),
+                        tourOptionId: parseInt(tourOptionId),
+                        travelDate: travelDate,
+                        transferId: parseInt(transferId),
+                        adult: parseInt(adult),
+                        child: parseInt(child),
+                        infant: parseInt(infant),
+                        contractId: parseInt(contractId)
+                    })
+                });
+
+                console.log('Availability API Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error! status:', response.status, 'response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Availability API Response data:', data);
+                
+                // Process the response according to the new format
+                // status: 1 means available, other values mean unavailable
+                if (data && data.result) {
+                    return {
+                        ...data,
+                        isAvailable: data.result.status === 1
+                    };
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error checking availability:', error);
+                return null;
+            }
+        }
+
+        function renderTourOptions(tourOptionsData, tourId, contractId) {
+            console.log('Rendering tour options with data:', tourOptionsData, 'tourId:', tourId, 'contractId:', contractId);
+            const container = document.getElementById('modal-touroptions-content');
             if (!container || !tourOptionsData) return;
+
+            // Check if the data structure matches our expectations
+            if (!tourOptionsData.touroption) {
+                console.log('Tour options data structure unexpected:', Object.keys(tourOptionsData));
+                container.innerHTML = '<p class="no-data">Unexpected data format received.</p>';
+                return;
+            }
 
             const { touroption, operationdays, specialdates, transfertime } = tourOptionsData;
 
@@ -2140,7 +2552,24 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                 return `
                     <div class="touroption-card">
                         <div class="touroption-header">
-                            <h3 class="touroption-name">${option.optionName || 'Unnamed Option'}</h3>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <h3 class="touroption-name">${option.optionName || 'Unnamed Option'}</h3>
+                                ${optionId ? `<span class="touroption-id-badge">ID: ${optionId}</span>` : ''}
+                            </div>
+                            <button class="info-icon" aria-label="View API details" aria-expanded="false" type="button" style="position: absolute; top: 16px; right: 16px;">i</button>
+                        </div>
+                        <div class="tooltip" role="dialog" aria-modal="false" aria-hidden="true" style="top: 40px; right: 16px; bottom: auto;">
+                            <div class="tooltip-header">
+                                <div class="tooltip-title">Tour Options API</div>
+                                <div class="tooltip-meta">
+                                    <div>POST /staticDetailsOptions_proxy.php</div>
+                                    <div>Tour ID: ${tourId}</div>
+                                    <div>Contract ID: ${contractId}</div>
+                                </div>
+                            </div>
+                            <div class="tooltip-content" aria-live="polite">
+                                <span class="spinner" aria-hidden="true"></span> Loading response...
+                            </div>
                         </div>
                         
                         ${option.optionDescription ? `
@@ -2263,8 +2692,105 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                 <div class="touroption-section-content">
                                     ${optionTransferTimes.map(transfer => `
                                         <div class="transfer-time-item">
-                                            <span class="transfer-time-type">${transfer.transferType || 'Transfer'}:</span>
+                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                                <span class="transfer-time-type">${transfer.transferType || 'Transfer'}:</span>
+                                                ${transfer.transferId ? `<span class="transfer-id-badge">ID: ${transfer.transferId}</span>` : ''}
+                                                <div class="availability-container">
+                                                    <span class="availability-badge" data-tour-id="${tourId}" data-tour-option-id="${optionId}" data-transfer-id="${transfer.transferId}" data-transfer-name="${transfer.transferType || ''}" style="cursor: pointer;">
+                                                        Check Availability
+                                                    </span>
+                                                    <button class="modal-info-icon" style="margin-left: 4px;" aria-label="View availability API details" data-endpoint="https://sandbox.raynatours.com/api/Tour/availability" data-method="POST" data-request='{"tourId":${tourId},"tourOptionId":${optionId},"travelDate":"","transferId":${transfer.transferId},"adult":1,"child":0,"infant":0,"contractId":${contractId}}'>i</button>
+                                                    <button class="book-button" style="display: none; margin-left: 8px;" data-tour-id="${tourId}" data-tour-option-id="${optionId}" data-transfer-id="${transfer.transferId}" data-transfer-name="${transfer.transferType || ''}" data-contract-id="${contractId}">Book</button>
+                                                </div>
+                                            </div>
                                             <span class="transfer-time-details">${transfer.transferTime || 'N/A'}</span>
+                                            
+                                            <div class="transfer-details-section">
+                                                ${option.duration ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Duration:</span>
+                                                        <span class="transfer-detail-value">${option.duration}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.mobileVoucher !== undefined ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Mobile Voucher:</span>
+                                                        <span class="transfer-detail-value">${option.mobileVoucher ? 'Yes' : 'No'}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.printedVoucher !== undefined ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Printed Voucher:</span>
+                                                        <span class="transfer-detail-value">${option.printedVoucher ? 'Yes' : 'No'}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.instantConfirmation !== undefined ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Instant Confirmation:</span>
+                                                        <span class="transfer-detail-value">${option.instantConfirmation ? 'Yes' : 'No'}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.cancellationPolicy ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Cancellation Policy:</span>
+                                                        <span class="transfer-detail-value">${option.cancellationPolicy}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.cancellationPolicyDescription ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Cancellation Details:</span>
+                                                        <span class="transfer-detail-value">${option.cancellationPolicyDescription}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.childPolicy ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Child Policy:</span>
+                                                        <span class="transfer-detail-value">${option.childPolicy}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.childPolicyDescription ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Child Policy Details:</span>
+                                                        <span class="transfer-detail-value">${option.childPolicyDescription}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.cutOffhrs ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Cut-off Hours:</span>
+                                                        <span class="transfer-detail-value">${option.cutOffhrs}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.inclusion ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Inclusions:</span>
+                                                        <span class="transfer-detail-value">${option.inclusion}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                ${option.exclusion ? `
+                                                    <div class="transfer-detail-item">
+                                                        <span class="transfer-detail-label">Exclusions:</span>
+                                                        <span class="transfer-detail-value">${option.exclusion}</span>
+                                                    </div>
+                                                ` : ''}
+                                                
+                                                <div class="transfer-pricing" data-tour-id="${tourId}" data-contract-id="${contractId}" data-tour-option-id="${optionId}" data-transfer-name="${transfer.transferType || ''}">
+                                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                                        <strong>Pricing Details</strong>
+                                                        <button class="modal-info-icon" aria-label="View pricing API details" data-endpoint="https://sandbox.raynatours.com/api/Tour/touroption" data-method="POST" data-request='{"tourId":${tourId},"contractId":${contractId},"travelDate":"","noOfAdult":1,"noOfChild":0,"noOfInfant":0}'>i</button>
+                                                    </div>
+                                                    <div class="loading-spinner" style="font-size: 12px;">Loading pricing...</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -2327,19 +2853,32 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
 
         // Function to load tour options when modal opens
         function loadTourOptions(tourId, contractId) {
-            const tourOptionsSection = document.querySelector('.touroptions-section');
-            if (!tourOptionsSection) return;
+            const tourOptionsSection = document.getElementById('modal-touroptions');
+            if (!tourOptionsSection) {
+                console.error('Tour Options section not found');
+                return;
+            }
 
             // Show loading state
-            const content = tourOptionsSection.querySelector('.touroptions-content');
+            const content = document.getElementById('modal-touroptions-content');
+            if (!content) {
+                console.error('Tour Options content container not found');
+                return;
+            }
+            
             content.innerHTML = '<div class="loading-spinner">Loading tour options...</div>';
 
+            console.log('Loading tour options for tourId:', tourId, 'contractId:', contractId);
+            
             fetchTourOptions(tourId, contractId)
                 .then(data => {
+                    console.log('Tour options API response:', data);
                     if (data) {
-                        renderTourOptions(data);
+                        renderTourOptions(data, tourId, contractId);
+                        // After rendering tour options, trigger availability checks for all transfers
+                        checkAllTransfersAvailability(data, tourId, contractId);
                     } else {
-                        content.innerHTML = '<p class="no-data">Failed to load tour options.</p>';
+                        content.innerHTML = '<p class="no-data">No tour options available.</p>';
                     }
                 })
                 .catch(error => {
@@ -2347,6 +2886,868 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                     content.innerHTML = '<p class="no-data">Error loading tour options.</p>';
                 });
         }
+
+        // Event listeners for pricing and availability API calls
+        document.addEventListener('click', function(e) {
+            // Handle pricing API calls (ignore clicks on info icons)
+            if (e.target.closest('.modal-info-icon')) return;
+            if (e.target.closest('.transfer-pricing')) {
+                const pricingElement = e.target.closest('.transfer-pricing');
+                const tourId = pricingElement.getAttribute('data-tour-id');
+                const contractId = pricingElement.getAttribute('data-contract-id');
+                const tourOptionId = pricingElement.getAttribute('data-tour-option-id');
+                const transferName = pricingElement.getAttribute('data-transfer-name');
+                
+                // Get travel date from modal (if available) and convert to MM-DD-YYYY
+                let travelDate = document.getElementById('modal-tour-date')?.textContent?.replace('Date: ', '') || '';
+                if (travelDate && travelDate.includes('-')) {
+                    const dateParts = travelDate.split('-');
+                    if (dateParts.length === 3) {
+                        // Convert from YYYY-MM-DD to MM-DD-YYYY
+                        travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`; // MM-DD-YYYY
+                    }
+                }
+                
+                if (tourId && contractId && tourOptionId) {
+                    fetchTourOptionDetails(tourId, contractId, travelDate, 1, 0, 0)
+                        .then(data => {
+                            if (data && data.result && data.result.length > 0) {
+                                // Find the specific transfer option
+                                const transferOption = data.result.find(option => 
+                                    option.tourOptionId == tourOptionId && 
+                                    option.transferName === transferName
+                                );
+                                
+                                if (transferOption) {
+                                    pricingElement.innerHTML = `
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                            <strong>Pricing Details</strong>
+                                            <button class="modal-info-icon" aria-label="View pricing API details" data-endpoint="https://sandbox.raynatours.com/api/Tour/touroption" data-method="POST" data-request='{"tourId":${tourId},"contractId":${contractId},"travelDate":"${travelDate}","noOfAdult":1,"noOfChild":0,"noOfInfant":0}'>i</button>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Adult Price:</span>
+                                            <span class="pricing-value">${transferOption.adultPrice || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Child Price:</span>
+                                            <span class="pricing-value">${transferOption.childPrice || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Infant Price:</span>
+                                            <span class="pricing-value">${transferOption.infantPrice || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Without Discount:</span>
+                                            <span class="pricing-value">${transferOption.withoutDiscountAmount || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Final Amount:</span>
+                                            <span class="pricing-value">${transferOption.finalAmount || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Start Time:</span>
+                                            <span class="pricing-value">${transferOption.startTime || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Departure Time:</span>
+                                            <span class="pricing-value">${transferOption.departureTime || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Cut-off:</span>
+                                            <span class="pricing-value">${transferOption.cutOff || 'N/A'}</span>
+                                        </div>
+                                        <div class="pricing-item">
+                                            <span class="pricing-label">Is Slot:</span>
+                                            <span class="pricing-value">${transferOption.isSlot ? 'Yes' : 'No'}</span>
+                                        </div>
+                                    `;
+                                    
+                                    // Store API response data for tooltips
+                                    pricingElement.setAttribute('data-response', JSON.stringify(data));
+                                    pricingElement.setAttribute('data-request', JSON.stringify({
+                                        tourId,
+                                        contractId,
+                                        travelDate,
+                                        noOfAdult: 1,
+                                        noOfChild: 0,
+                                        noOfInfant: 0
+                                    }));
+                                } else {
+                                    pricingElement.innerHTML = '<div class="no-data">No pricing data available for this transfer.</div>';
+                                }
+                            } else {
+                                pricingElement.innerHTML = '<div class="no-data">No pricing data available.</div>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching pricing details:', error);
+                            pricingElement.innerHTML = '<div class="no-data">Error loading pricing details.</div>';
+                        });
+                }
+            }
+            
+            // Handle availability checks
+            if (e.target.closest('.availability-badge')) {
+                const badge = e.target.closest('.availability-badge');
+                const tourId = badge.getAttribute('data-tour-id');
+                const tourOptionId = badge.getAttribute('data-tour-option-id');
+                const transferId = badge.getAttribute('data-transfer-id');
+                const transferName = badge.getAttribute('data-transfer-name');
+                
+                // Get travel date from modal (if available) and convert to MM-DD-YYYY
+                let travelDate = document.getElementById('modal-tour-date')?.textContent?.replace('Date: ', '') || '';
+                if (travelDate && travelDate.includes('-')) {
+                    const dateParts = travelDate.split('-');
+                    if (dateParts.length === 3) {
+                        // Convert from YYYY-MM-DD to MM-DD-YYYY
+                        travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`; // MM-DD-YYYY
+                    }
+                }
+                
+                if (tourId && tourOptionId && transferId) {
+                    badge.innerHTML = 'Checking...';
+                    
+                    checkAvailability(tourId, tourOptionId, travelDate, transferId, 1, 0, 0)
+                        .then(data => {
+                            if (data && data.isAvailable !== undefined) {
+                                if (data.isAvailable) {
+                                    badge.innerHTML = `Available`;
+                                    badge.classList.remove('unavailable');
+                                } else {
+                                    badge.innerHTML = `Unavailable`;
+                                    badge.classList.add('unavailable');
+                                }
+                                
+                                // Store API response data for tooltips
+                                badge.setAttribute('data-response', JSON.stringify(data));
+                                badge.setAttribute('data-request', JSON.stringify({
+                                    tourId,
+                                    tourOptionId,
+                                    travelDate,
+                                    transferId,
+                                    adult: 1,
+                                    child: 0,
+                                    infant: 0,
+                                    contractId: 300
+                                }));
+                            } else {
+                                badge.innerHTML = 'Availability Unknown';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking availability:', error);
+                            badge.innerHTML = 'Error';
+                        });
+                }
+            }
+        });
+
+        // Auto-load Tour Options data when modal opens (if travel date is available)
+        document.addEventListener('modalOpened', function() {
+            setTimeout(() => {
+                const travelDateElement = document.getElementById('modal-tour-date');
+                let travelDate = travelDateElement?.textContent?.replace('Date: ', '');
+                const tourId = document.getElementById('modal-tour-id')?.textContent?.replace('ID: ', '');
+                const contractId = 300; // Default contract ID
+                
+                // Convert date format from YYYY-MM-DD to MM-DD-YYYY for API calls
+                if (travelDate && travelDate.includes('-')) {
+                    const dateParts = travelDate.split('-');
+                    if (dateParts.length === 3) {
+                        // Convert from YYYY-MM-DD to MM-DD-YYYY
+                        travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`; // MM-DD-YYYY
+                    }
+                }
+                
+                if (travelDate && tourId) {
+                    // Fetch Tour Options data for all transfer options
+                    fetchTourOptionDetails(tourId, contractId, travelDate, 1, 0, 0)
+                        .then(data => {
+                            if (data && data.result && data.result.length > 0) {
+                                // Update all transfer pricing sections
+                                document.querySelectorAll('.transfer-pricing').forEach(pricingElement => {
+                                    const tourOptionId = pricingElement.getAttribute('data-tour-option-id');
+                                    const transferName = pricingElement.getAttribute('data-transfer-name');
+                                    
+                                    const transferOption = data.result.find(option => 
+                                        option.tourOptionId == tourOptionId && 
+                                        option.transferName === transferName
+                                    );
+                                    
+                                    if (transferOption) {
+                                        pricingElement.innerHTML = `
+                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                                <strong>Pricing Details</strong>
+                                                <button class="modal-info-icon" aria-label="View pricing API details" data-endpoint="https://sandbox.raynatours.com/api/Tour/touroption" data-method="POST" data-request='{"tourId":${tourId},"contractId":${contractId},"travelDate":"${travelDate}","noOfAdult":1,"noOfChild":0,"noOfInfant":0}'>i</button>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Adult Price:</span>
+                                                <span class="pricing-value">${transferOption.adultPrice || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Child Price:</span>
+                                                <span class="pricing-value">${transferOption.childPrice || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Infant Price:</span>
+                                                <span class="pricing-value">${transferOption.infantPrice || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Without Discount:</span>
+                                                <span class="pricing-value">${transferOption.withoutDiscountAmount || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Final Amount:</span>
+                                                <span class="pricing-value">${transferOption.finalAmount || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Start Time:</span>
+                                                <span class="pricing-value">${transferOption.startTime || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Departure Time:</span>
+                                                <span class="pricing-value">${transferOption.departureTime || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Cut-off:</span>
+                                                <span class="pricing-value">${transferOption.cutOff || 'N/A'}</span>
+                                            </div>
+                                            <div class="pricing-item">
+                                                <span class="pricing-label">Is Slot:</span>
+                                                <span class="pricing-value">${transferOption.isSlot ? 'Yes' : 'No'}</span>
+                                            </div>
+                                        `;
+                                        
+                                        // Store API response data for tooltips
+                                        pricingElement.setAttribute('data-response', JSON.stringify(data));
+                                        pricingElement.setAttribute('data-request', JSON.stringify({
+                                            tourId,
+                                            contractId,
+                                            travelDate,
+                                            noOfAdult: 1,
+                                            noOfChild: 0,
+                                            noOfInfant: 0
+                                        }));
+                                        
+                                        // Update transfer ID badge with actual transferId from API response
+                                        const transferIdBadge = pricingElement.closest('.transfer-time-item').querySelector('.transfer-id-badge');
+                                        if (transferIdBadge && transferOption.transferId) {
+                                            transferIdBadge.textContent = `Transfer ID: ${transferOption.transferId}`;
+                                            transferIdBadge.setAttribute('data-transfer-id', transferOption.transferId);
+                                        }
+                                        
+                                        // Update availability badge with transferId
+                                        const availabilityBadge = pricingElement.closest('.transfer-time-item').querySelector('.availability-badge');
+                                        if (availabilityBadge && transferOption.transferId) {
+                                            availabilityBadge.setAttribute('data-transfer-id', transferOption.transferId);
+                                            // Update Book button with transferId
+                                            const bookBtn = pricingElement.closest('.transfer-time-item').querySelector('.book-button');
+                                            if (bookBtn) {
+                                                bookBtn.setAttribute('data-transfer-id', transferOption.transferId);
+                                            }
+                                            
+                                            // Auto-check availability
+                                            checkAvailability(tourId, tourOptionId, travelDate, transferOption.transferId, 1, 0, 0)
+                                                .then(availabilityData => {
+                                                    if (availabilityData && availabilityData.isAvailable !== undefined) {
+                                                        if (availabilityData.isAvailable) {
+                                                            availabilityBadge.innerHTML = `Available`;
+                                                            availabilityBadge.classList.remove('unavailable');
+                                                            
+                                                            // Show Book button when available
+                                                            const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
+                                                            if (bookButton) {
+                                                                bookButton.style.display = 'inline-block';
+                                                            }
+                                                        } else {
+                                                            availabilityBadge.innerHTML = `Unavailable`;
+                                                            availabilityBadge.classList.add('unavailable');
+                                                            
+                                                            // Hide Book button when unavailable
+                                                            const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
+                                                            if (bookButton) {
+                                                                bookButton.style.display = 'none';
+                                                            }
+                                                        }
+                                                        
+                                                        // Store API response data for tooltips
+                                                        availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
+                                                        availabilityBadge.setAttribute('data-request', JSON.stringify({
+                                                            tourId,
+                                                            tourOptionId,
+                                                            travelDate,
+                                                            transferId: transferOption.transferId,
+                                                            adult: 1,
+                                                            child: 0,
+                                                            infant: 0,
+                                                            contractId: 300
+                                                        }));
+                                                    } else {
+                                                        availabilityBadge.innerHTML = 'Availability Unknown';
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error checking availability:', error);
+                                                    availabilityBadge.innerHTML = 'Error';
+                                                });
+                                        }
+                                    } else {
+                                        pricingElement.innerHTML = '<div class="no-data">No pricing data available for this transfer.</div>';
+                                    }
+                                });
+                            } else {
+                                document.querySelectorAll('.transfer-pricing').forEach(pricingElement => {
+                                    pricingElement.innerHTML = '<div class="no-data">No pricing data available.</div>';
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching tour options:', error);
+                            document.querySelectorAll('.transfer-pricing').forEach(pricingElement => {
+                                pricingElement.innerHTML = '<div class="no-data">Error loading pricing details.</div>';
+                            });
+                        });
+                }
+            }, 1000);
+        });
+        
+        // Function to check availability for all transfers
+        async function checkAllTransfersAvailability(tourOptionsData, tourId, contractId) {
+            if (!tourOptionsData || !tourOptionsData.result || !Array.isArray(tourOptionsData.result)) {
+                console.error('Invalid tour options data');
+                return;
+            }
+            
+            // Get travel date from modal (if available) and convert to MM-DD-YYYY
+            let travelDate = document.getElementById('modal-tour-date')?.textContent?.replace('Date: ', '') || '';
+            if (travelDate && travelDate.includes('-')) {
+                const dateParts = travelDate.split('-');
+                if (dateParts.length === 3) {
+                    // Convert from YYYY-MM-DD to MM-DD-YYYY
+                    travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`; // MM-DD-YYYY
+                }
+            }
+            
+            // Check availability for each transfer
+            const availabilityPromises = [];
+            
+            tourOptionsData.result.forEach(transferOption => {
+                if (transferOption.transferId && transferOption.tourOptionId) {
+                    const promise = checkAvailability(
+                        tourId,
+                        transferOption.tourOptionId,
+                        travelDate,
+                        transferOption.transferId,
+                        1, // adult
+                        0, // child
+                        0  // infant
+                    )
+                    .then(availabilityData => {
+                        // Update the availability badge for this transfer
+                        const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferOption.transferId}"]`);
+                        if (availabilityBadge) {
+                            if (availabilityData && availabilityData.isAvailable !== undefined) {
+                                if (availabilityData.isAvailable) {
+                                    availabilityBadge.innerHTML = `Available`;
+                                    availabilityBadge.classList.remove('unavailable');
+                                    
+                                    // Show Book button when available
+                                    const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
+                                    if (bookButton) {
+                                        bookButton.style.display = 'inline-block';
+                                    }
+                                } else {
+                                    availabilityBadge.innerHTML = `Unavailable`;
+                                    availabilityBadge.classList.add('unavailable');
+                                    
+                                    // Hide Book button when unavailable
+                                    const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
+                                    if (bookButton) {
+                                        bookButton.style.display = 'none';
+                                    }
+                                }
+                                
+                                // Store API response data for tooltips
+                                availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
+                                availabilityBadge.setAttribute('data-request', JSON.stringify({
+                                    tourId,
+                                    tourOptionId: transferOption.tourOptionId,
+                                    travelDate,
+                                    transferId: transferOption.transferId,
+                                    adult: 1,
+                                    child: 0,
+                                    infant: 0,
+                                    contractId: 300
+                                }));
+                            } else {
+                                availabilityBadge.innerHTML = 'Availability Unknown';
+                            }
+                        }
+                        return availabilityData;
+                    })
+                    .catch(error => {
+                        console.error(`Error checking availability for transfer ${transferOption.transferId}:`, error);
+                        const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferOption.transferId}"]`);
+                        if (availabilityBadge) {
+                            availabilityBadge.innerHTML = 'Error';
+                        }
+                        return null;
+                    });
+                    
+                    availabilityPromises.push(promise);
+                }
+            });
+            
+            // Wait for all availability checks to complete
+            return Promise.all(availabilityPromises);
+        }
+
+        // Book button event listener (dynamic data)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('book-button')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const tourId = parseInt(e.target.getAttribute('data-tour-id'));
+                const tourOptionId = parseInt(e.target.getAttribute('data-tour-option-id'));
+                const transferId = parseInt(e.target.getAttribute('data-transfer-id'));
+                
+                // Get travel date from modal and convert to MM-DD-YYYY
+                let travelDate = document.getElementById('modal-tour-date')?.textContent?.replace('Date: ', '') || '';
+                if (travelDate && travelDate.includes('-')) {
+                    const dateParts = travelDate.split('-');
+                    if (dateParts.length === 3) {
+                        travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`;
+                    }
+                }
+                
+                const transferItem = e.target.closest('.transfer-time-item');
+                const pricingElement = transferItem?.querySelector('.transfer-pricing');
+                let transferOption = null;
+                let adultRate = 0, childRate = 0, startTime = '', timeSlotId = '', pickup = false;
+                let adult = 1, child = 0, infant = 0;
+                
+                // Try to read adult/child counts from stored availability request
+                const availabilityBadge = transferItem?.querySelector('.availability-badge');
+                try {
+                    const req = availabilityBadge?.getAttribute('data-request');
+                    if (req) {
+                        const rq = JSON.parse(req);
+                        adult = rq.adult ?? adult;
+                        child = rq.child ?? child;
+                        infant = rq.infant ?? infant;
+                    }
+                } catch {}
+                
+                // Extract transferOption details from stored pricing response
+                try {
+                    const pricingDataRaw = pricingElement?.getAttribute('data-response');
+                    if (pricingDataRaw) {
+                        const pricingData = JSON.parse(pricingDataRaw);
+                        const options = pricingData.result || pricingData.data?.result || [];
+                        transferOption = options.find(o => parseInt(o.transferId) === transferId) || null;
+                        if (transferOption) {
+                            // Map to correct fields from touroption API
+                            adultRate = parseFloat(transferOption.adultPrice ?? 0);
+                            childRate = parseFloat(transferOption.childPrice ?? 0);
+                            startTime = transferOption.startTime || '';
+                            timeSlotId = String(transferOption.timeSlotId || '');
+                            pickup = Boolean(transferOption.pickup ?? false);
+                        }
+                    }
+                } catch {}
+                
+                // Prefer API-provided finalAmount; fallback to computed total
+                let serviceTotal = 0;
+                if (transferOption && transferOption.finalAmount !== undefined) {
+                    serviceTotal = parseFloat(transferOption.finalAmount) || 0;
+                } else {
+                    serviceTotal = (adultRate * adult) + (childRate * child);
+                }
+                
+                // Generate unique numbers
+                const uniqueNo = `UNIQ-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+                const serviceUniqueId = `SUID-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+                
+                // Generate random passenger
+                function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+                const firstNames = ['Ayaan','Neha','Ravi','Sara','Omar','Liam','Mia','Anya'];
+                const lastNames = ['Khan','Patel','Singh','Verma','Ali','Wong','Smith','Garcia'];
+                const fn = randomFrom(firstNames);
+                const ln = randomFrom(lastNames);
+                const email = `${fn.toLowerCase()}.${ln.toLowerCase()}${Math.floor(Math.random()*1000)}@example.com`;
+                const mobile = `05${Math.floor(10000000 + Math.random()*89999999)}`;
+                
+                const bookingData = {
+                    uniqueNo,
+                    TourDetails: [
+                        {
+                            serviceUniqueId,
+                            tourId,
+                            optionId: tourOptionId,
+                            adult,
+                            child,
+                            infant,
+                            tourDate: travelDate,
+                            timeSlotId,
+                            startTime,
+                            transferId,
+                            pickup,
+                            adultRate: adultRate.toFixed(2),
+                            childRate: (child > 0 ? childRate : 0).toFixed(2),
+                            serviceTotal: serviceTotal.toFixed(2)
+                        }
+                    ],
+                    passengers: [
+                        {
+                            serviceType: 'tour',
+                            prefix: 'Mr',
+                            firstName: fn,
+                            lastName: ln,
+                            email,
+                            mobile,
+                            nationality: 'IN',
+                            message: '',
+                            leadPassenger: 1,
+                            paxType: 'Adult',
+                            clientReferenceNo: 'CLIENT-TEST'
+                        }
+                    ]
+                };
+                
+                openBookingForm(bookingData);
+            }
+        });
+
+
+        // Function to open booking form modal
+        function openBookingForm(bookingData) {
+            // Create booking form modal
+            const modal = document.createElement('div');
+            modal.className = 'modal booking-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div class="booking-form-container" style="background: white; padding: 20px; border-radius: 8px; max-width: 1000px; width: 96%; max-height: 85vh; overflow-y: auto;">
+                    <h2 style="margin-top: 0;">Book Tour</h2>
+                    <form id="booking-form" style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px;">
+                        <fieldset style="grid-column: 1 / -1; border: 1px solid #ddd; border-radius: 6px; padding: 10px;">
+                            <legend style="padding: 0 8px; font-weight: 600;">Tour Details</legend>
+                            <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px;">
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Tour ID</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].tourId}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Option ID</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].optionId}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Transfer ID</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].transferId}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Date</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].tourDate}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Start Time</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].startTime}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Time Slot ID</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].timeSlotId}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Pickup</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].pickup ? 'Yes' : 'No'}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Adult Rate</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].adultRate}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Child Rate</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].childRate}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Adults</label>
+                                    <input type="number" value="${bookingData.TourDetails[0].adult}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Children</label>
+                                    <input type="number" value="${bookingData.TourDetails[0].child}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Infants</label>
+                                    <input type="number" value="${bookingData.TourDetails[0].infant}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Service Total</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].serviceTotal}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Unique No</label>
+                                    <input type="text" value="${bookingData.uniqueNo}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Service Unique ID</label>
+                                    <input type="text" value="${bookingData.TourDetails[0].serviceUniqueId}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset style="grid-column: 1 / -1; border: 1px solid #ddd; border-radius: 6px; padding: 10px;">
+                            <legend style="padding: 0 8px; font-weight: 600;">Passenger Details</legend>
+                            <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px;">
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Service Type</label>
+                                    <input type="text" name="serviceType" value="${bookingData.passengers[0].serviceType}" readonly style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Prefix</label>
+                                    <input type="text" name="prefix" value="${bookingData.passengers[0].prefix}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Nationality</label>
+                                    <input type="text" name="nationality" value="${bookingData.passengers[0].nationality}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">First Name</label>
+                                    <input type="text" name="firstName" value="${bookingData.passengers[0].firstName}" required style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Last Name</label>
+                                    <input type="text" name="lastName" value="${bookingData.passengers[0].lastName}" required style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Email</label>
+                                    <input type="email" name="email" value="${bookingData.passengers[0].email}" required style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Mobile</label>
+                                    <input type="tel" name="mobile" value="${bookingData.passengers[0].mobile}" required style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Message</label>
+                                    <input type="text" name="message" value="${bookingData.passengers[0].message}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Lead Passenger</label>
+                                    <input type="number" name="leadPassenger" value="${bookingData.passengers[0].leadPassenger}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Pax Type</label>
+                                    <input type="text" name="paxType" value="${bookingData.passengers[0].paxType}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="display:block; margin-bottom:5px; font-weight:500; font-size:12px;">Client Reference No</label>
+                                    <input type="text" name="clientReferenceNo" value="${bookingData.passengers[0].clientReferenceNo}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div style="grid-column: 1 / -1; display: flex; gap: 10px;">
+                            <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Submit Booking</button>
+                            <button type="button" class="close-booking" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                        </div>
+                    </form>
+                    <div id="booking-result" style="margin-top: 15px;"></div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close modal handler
+            modal.querySelector('.close-booking').addEventListener('click', function() {
+                document.body.removeChild(modal);
+            });
+            
+            // Form submission handler
+            modal.querySelector('#booking-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Update form data with user input
+                const formData = new FormData(this);
+                bookingData.passengers[0].firstName = formData.get('firstName');
+                bookingData.passengers[0].lastName = formData.get('lastName');
+                bookingData.passengers[0].email = formData.get('email');
+                bookingData.passengers[0].mobile = formData.get('mobile');
+                
+                // Merge any edited passenger fields back into bookingData
+                bookingData.passengers[0].serviceType = formData.get('serviceType') || bookingData.passengers[0].serviceType;
+                bookingData.passengers[0].prefix = formData.get('prefix') || bookingData.passengers[0].prefix;
+                bookingData.passengers[0].nationality = formData.get('nationality') || bookingData.passengers[0].nationality;
+                bookingData.passengers[0].message = formData.get('message') || '';
+                bookingData.passengers[0].leadPassenger = Number(formData.get('leadPassenger') || bookingData.passengers[0].leadPassenger || 1);
+                bookingData.passengers[0].paxType = formData.get('paxType') || bookingData.passengers[0].paxType;
+                bookingData.passengers[0].clientReferenceNo = formData.get('clientReferenceNo') || bookingData.passengers[0].clientReferenceNo;
+
+                // Submit booking (testing: only log payload)
+                submitBooking(bookingData);
+            });
+            
+            // Close on outside click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        // Function to submit booking
+        async function submitBooking(bookingData) {
+            const resultDiv = document.getElementById('booking-result');
+            resultDiv.innerHTML = '<div style="background:#e7f1ff; color:#084298; padding:10px; border-radius:4px;">Submitting booking...</div>';
+            try {
+                const resp = await fetch('booking_proxy.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+                const text = await resp.text();
+                let data = null;
+                try { data = JSON.parse(text); } catch { /* keep raw text */ }
+
+                const statusCode = (data && (data.statuscode || data.statusCode)) || resp.status;
+                const message = (data && (data.message || data.status)) || (resp.ok ? 'Booking submitted' : 'Booking failed');
+
+                resultDiv.innerHTML = `
+                    <div style="background:${resp.ok ? '#e7f1ff' : '#f8d7da'}; color:${resp.ok ? '#084298' : '#721c24'}; padding:10px; border-radius:4px; margin-top:10px;">
+                        <strong>Booking Response</strong><br>
+                        Status Code: ${statusCode}<br>
+                        Message: ${message}
+                    </div>
+                `;
+
+                // Attempt to save request/response to DB
+                try {
+                    await fetch('save_booking.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ request: bookingData, response: data || { status: resp.status, raw: text } })
+                    });
+                } catch (err) {
+                    console.warn('Failed to save booking to DB', err);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="background:#f8d7da; color:#721c24; padding:10px; border-radius:4px; margin-top:10px;">
+                        <strong>Booking Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Function to save booking to database
+        async function saveBookingToDatabase(request, response) { /* disabled in test mode */ }
+    </script>
+    <script>
+        // Cancel Booking UI and flow
+        document.addEventListener('click', function(e){
+            if (e.target && e.target.id === 'cancel-booking-link'){
+                e.preventDefault();
+                const modal = document.createElement('div');
+                modal.className = 'cancel-booking-modal';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.background = 'rgba(0,0,0,0.5)';
+                modal.style.display = 'flex';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                modal.innerHTML = `
+                    <div class="cancel-form-container" style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 95%; max-height: 80vh; overflow-y: auto;">
+                        <h2 style="margin-top: 0;">Cancel Booking</h2>
+                        <form id="cancel-booking-form" style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Booking ID:</label>
+                                <input type="text" name="bookingId" placeholder="e.g., 123456" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Reference No:</label>
+                                <input type="text" name="referenceNo" placeholder="e.g., RN123" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div style="grid-column: 1 / -1;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Cancellation Reason:</label>
+                                <textarea name="cancellationReason" rows="3" placeholder="Reason for cancellation" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                            </div>
+                            <div style="grid-column: 1 / -1; display: flex; gap: 10px;">
+                                <button type="submit" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Submit Cancellation</button>
+                                <button type="button" class="close-cancel" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+                            </div>
+                        </form>
+                        <div id="cancel-result" style="margin-top: 15px;"></div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                modal.querySelector('.close-cancel').addEventListener('click', function(){
+                    document.body.removeChild(modal);
+                });
+
+                modal.querySelector('#cancel-booking-form').addEventListener('submit', async function(ev){
+                    ev.preventDefault();
+                    const fd = new FormData(this);
+                    const payload = {
+                        bookingId: fd.get('bookingId') || '',
+                        referenceNo: fd.get('referenceNo') || '',
+                        cancellationReason: fd.get('cancellationReason') || ''
+                    };
+                    const resultDiv = modal.querySelector('#cancel-result');
+                    resultDiv.innerHTML = '<div style="color:#dc3545;">Submitting cancellation...</div>';
+                    try{
+                        const resp = await fetch('cancelbooking_proxy.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(payload)
+                        });
+                        if(!resp.ok) throw new Error(`HTTP error ${resp.status}`);
+                        const data = await resp.json();
+
+                        resultDiv.innerHTML = `
+                            <div style="background:#f8d7da; color:#721c24; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                <strong>Cancellation Response</strong><br>
+                                Status Code: ${data.statuscode || 'N/A'}<br>
+                                Message: ${data.message || data.status || 'N/A'}
+                            </div>
+                        `;
+
+                        // Update DB status
+                        try {
+                            await fetch('cancel_booking.php', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({ request: payload, response: data })
+                            });
+                        } catch (err) { console.warn('Failed to update DB cancellation status', err); }
+                    } catch (error){
+                        resultDiv.innerHTML = `
+                            <div style="background:#f8d7da; color:#721c24; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                <strong>Cancellation Failed</strong><br>
+                                Error: ${error.message}
+                            </div>
+                        `;
+                    }
+                });
+
+                // Close on overlay click
+                modal.addEventListener('click', function(ev){ if (ev.target === modal) document.body.removeChild(modal); });
+            }
+        });
     </script>
 </body>
 </html>
