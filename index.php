@@ -1712,7 +1712,7 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                 console.log('Timestamp', nowIso);
                 console.log('Request Payload', payload);
 
-                const res = await fetch('/Rayana_Tours/details_proxy.php', {
+                const res = await fetch('details_proxy.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
