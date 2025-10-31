@@ -2524,6 +2524,62 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
             }
         }
 
+        // New API function to fetch time slots for a transfer
+        // Helper to normalize date strings to YYYY-MM-DD
+        function normalizeDateYMD(dateStr) {
+            if (!dateStr) return '';
+            let normalized = dateStr;
+            if (normalized.includes('-')) {
+                const parts = normalized.split('-');
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        normalized = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                    } else {
+                        normalized = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                    }
+                }
+            }
+            return normalized;
+        }
+
+        async function fetchTimeSlots(tourId, tourOptionId, travelDate, transferId, adult = 1, child = 0, infant = 0, contractId = 300) {
+            console.log('Fetching time slots for tourId:', tourId, 'tourOptionId:', tourOptionId, 'transferId:', transferId);
+            try {
+                // Normalize travelDate to YYYY-MM-DD for timeslot payload
+                let normalizedDate = normalizeDateYMD(travelDate);
+                const response = await fetch(getProxyUrl('timeslot_proxy.php'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tourId: parseInt(tourId),
+                        tourOptionId: parseInt(tourOptionId),
+                        travelDate: normalizedDate,
+                        transferId: parseInt(transferId),
+                        adult: parseInt(adult),
+                        child: parseInt(child),
+                        infant: parseInt(infant),
+                        contractId: parseInt(contractId)
+                    })
+                });
+
+                console.log('Time Slots API Response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP error! status:', response.status, 'response:', errorText);
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
+
+                const data = await response.json();
+                console.log('Time Slots API Response data:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching time slots:', error);
+                return null;
+            }
+        }
+
         function renderTourOptions(tourOptionsData, tourId, contractId) {
             console.log('Rendering tour options with data:', tourOptionsData, 'tourId:', tourId, 'contractId:', contractId);
             const container = document.getElementById('modal-touroptions-content');
@@ -2919,6 +2975,7 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                 );
                                 
                                 if (transferOption) {
+                                    const normalizedDateLocal = normalizeDateYMD(travelDate);
                                     pricingElement.innerHTML = `
                                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                                             <strong>Pricing Details</strong>
@@ -2960,6 +3017,13 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                             <span class="pricing-label">Is Slot:</span>
                                             <span class="pricing-value">${transferOption.isSlot ? 'Yes' : 'No'}</span>
                                         </div>
+                                        <div class="timeslot-section" style="margin-top:8px;">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                                <strong>Available Time Slots</strong>
+                                                <span class="timeslot-date">Date: ${normalizedDateLocal}</span>
+                                            </div>
+                                            <div class="timeslot-list" style="display:flex;flex-wrap:wrap;gap:4px;">Loading time slots...</div>
+                                        </div>
                                     `;
                                     
                                     // Store API response data for tooltips
@@ -2972,6 +3036,38 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                         noOfChild: 0,
                                         noOfInfant: 0
                                     }));
+                                    // Fetch time slots for this transfer and render below pricing
+                                    const tsList = pricingElement.querySelector('.timeslot-list');
+                                    if (tsList && transferOption.transferId) {
+                                        tsList.innerHTML = 'Loading time slots...';
+                                        fetchTimeSlots(tourId, tourOptionId, travelDate, transferOption.transferId, 1, 0, 0, 300)
+                                            .then(tsData => {
+                                                var slots = [];
+                                                if (tsData && tsData.result && Array.isArray(tsData.result)) {
+                                                    slots = tsData.result;
+                                                } else if (tsData && tsData.data && tsData.data.result && Array.isArray(tsData.data.result)) {
+                                                    slots = tsData.data.result;
+                                                }
+                                                if (slots && slots.length > 0) {
+                                                    const items = slots.map(function(slot){
+                                                        var label = (slot && (slot.timeSlot || slot.startTime)) ? (slot.timeSlot || slot.startTime) : 'N/A';
+                                                        var id = (slot && slot.timeSlotId) ? String(slot.timeSlotId) : '';
+                                                        return `<span class="timeslot-pill" data-label="${label}" data-time-slot-id="${id}" style="display:inline-block;padding:6px 10px;border:1px solid #ddd;border-radius:9999px;background:#f8f8f8;margin:4px;font-size:12px;cursor:pointer;">`+
+                                                               `${label}`+
+                                                               `${id ? `<span class=\"slot-id\" style=\"margin-left:6px;color:\#888;font-size:11px;\">#${id}</span>` : ''}`+
+                                                               `</span>`;
+                                                    }).join('');
+                                                    tsList.innerHTML = items;
+                                                    pricingElement.setAttribute('data-timeslots', JSON.stringify(slots));
+                                                } else {
+                                                    tsList.innerHTML = '<div class="no-data">No slots found.</div>';
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error('Error loading time slots:', err);
+                                                tsList.innerHTML = '<div class="no-data">Error loading time slots.</div>';
+                                            });
+                                    }
                                 } else {
                                     pricingElement.innerHTML = '<div class="no-data">No pricing data available for this transfer.</div>';
                                 }
@@ -3030,6 +3126,33 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                     infant: 0,
                                     contractId: 300
                                 }));
+
+                                // After availability, fetch time slots and show count
+                                return fetchTimeSlots(tourId, tourOptionId, travelDate, transferId, 1, 0, 0, 300)
+                                    .then(tsData => {
+                                        if (!tsData) {
+                                            return;
+                                        }
+                                        // Try to extract slots array from various possible structures
+                                        var slots = [];
+                                        if (tsData && tsData.result && Array.isArray(tsData.result)) {
+                                            slots = tsData.result;
+                                        } else if (tsData && tsData.data && tsData.data.result && Array.isArray(tsData.data.result)) {
+                                            slots = tsData.data.result;
+                                        }
+                                        if (slots && slots.length > 0) {
+                                            // Append slot count to badge with normalized date
+                                            var text = badge.textContent || '';
+                                            var prefix = (text && text.trim().length > 0) ? text.trim() + ' — ' : '';
+                                            var normalizedDateLocal = normalizeDateYMD(travelDate);
+                                            badge.innerHTML = prefix + slots.length + ' time slots on ' + normalizedDateLocal;
+                                            // Store timeslot data for debugging/tooltips if needed
+                                            badge.setAttribute('data-timeslots', JSON.stringify(slots));
+                                        } else {
+                                            // If no slots, keep availability text; optionally indicate none
+                                            // badge.innerHTML = (badge.textContent || 'Unavailable') + ' — No slots';
+                                        }
+                                    });
                             } else {
                                 badge.innerHTML = 'Availability Unknown';
                             }
@@ -3075,6 +3198,7 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                     );
                                     
                                     if (transferOption) {
+                                        const normalizedDateLocal = normalizeDateYMD(travelDate);
                                         pricingElement.innerHTML = `
                                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                                                 <strong>Pricing Details</strong>
@@ -3116,6 +3240,13 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                                 <span class="pricing-label">Is Slot:</span>
                                                 <span class="pricing-value">${transferOption.isSlot ? 'Yes' : 'No'}</span>
                                             </div>
+                                            <div class="timeslot-section" style="margin-top:8px;">
+                                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                                    <strong>Available Time Slots</strong>
+                                                    <span class="timeslot-date">Date: ${normalizedDateLocal}</span>
+                                                </div>
+                                                <div class="timeslot-list" style="display:flex;flex-wrap:wrap;gap:4px;">Loading time slots...</div>
+                                            </div>
                                         `;
                                         
                                         // Store API response data for tooltips
@@ -3146,13 +3277,13 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                                 bookBtn.setAttribute('data-transfer-id', transferOption.transferId);
                                             }
                                             
-                                            // Auto-check availability
-                                            checkAvailability(tourId, tourOptionId, travelDate, transferOption.transferId, 1, 0, 0)
-                                                .then(availabilityData => {
-                                                    if (availabilityData && availabilityData.isAvailable !== undefined) {
-                                                        if (availabilityData.isAvailable) {
-                                                            availabilityBadge.innerHTML = `Available`;
-                                                            availabilityBadge.classList.remove('unavailable');
+                                        // Auto-check availability
+                                        checkAvailability(tourId, tourOptionId, travelDate, transferOption.transferId, 1, 0, 0)
+                                            .then(availabilityData => {
+                                                if (availabilityData && availabilityData.isAvailable !== undefined) {
+                                                    if (availabilityData.isAvailable) {
+                                                        availabilityBadge.innerHTML = `Available`;
+                                                        availabilityBadge.classList.remove('unavailable');
                                                             
                                                             // Show Book button when available
                                                             const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
@@ -3171,25 +3302,65 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                                                         }
                                                         
                                                         // Store API response data for tooltips
-                                                        availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
-                                                        availabilityBadge.setAttribute('data-request', JSON.stringify({
-                                                            tourId,
-                                                            tourOptionId,
-                                                            travelDate,
-                                                            transferId: transferOption.transferId,
-                                                            adult: 1,
-                                                            child: 0,
-                                                            infant: 0,
-                                                            contractId: 300
-                                                        }));
-                                                    } else {
-                                                        availabilityBadge.innerHTML = 'Availability Unknown';
-                                                    }
-                                                })
-                                                .catch(error => {
-                                                    console.error('Error checking availability:', error);
-                                                    availabilityBadge.innerHTML = 'Error';
-                                                });
+                                                    availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
+                                                    availabilityBadge.setAttribute('data-request', JSON.stringify({
+                                                        tourId,
+                                                        tourOptionId,
+                                                        travelDate,
+                                                        transferId: transferOption.transferId,
+                                                        adult: 1,
+                                                        child: 0,
+                                                        infant: 0,
+                                                        contractId: 300
+                                                    }));
+
+                                                    // Also fetch time slots for this transfer and show count
+                                                    return fetchTimeSlots(tourId, tourOptionId, travelDate, transferOption.transferId, 1, 0, 0, 300)
+                                                        .then(tsData => {
+                                                            if (!tsData) {
+                                                                return;
+                                                            }
+                                                            var slots = [];
+                                                            if (tsData && tsData.result && Array.isArray(tsData.result)) {
+                                                                slots = tsData.result;
+                                                            } else if (tsData && tsData.data && tsData.data.result && Array.isArray(tsData.data.result)) {
+                                                                slots = tsData.data.result;
+                                                            }
+                                                            if (slots && slots.length > 0) {
+                                                                var text = availabilityBadge.textContent || '';
+                                                                var prefix = (text && text.trim().length > 0) ? text.trim() + ' — ' : '';
+                                                                var normalizedDateLocal = normalizeDateYMD(travelDate);
+                                                                availabilityBadge.innerHTML = prefix + slots.length + ' time slots on ' + normalizedDateLocal;
+                                                                availabilityBadge.setAttribute('data-timeslots', JSON.stringify(slots));
+                                                                // Also render slots under Pricing Details
+                                                                const tsList = pricingElement.querySelector('.timeslot-list');
+                                                                if (tsList) {
+                                                                const items = slots.map(function(slot){
+                                                                    var label = (slot && (slot.timeSlot || slot.startTime)) ? (slot.timeSlot || slot.startTime) : 'N/A';
+                                                                    var id = (slot && slot.timeSlotId) ? String(slot.timeSlotId) : '';
+                                                                    return `<span class="timeslot-pill" data-label="${label}" data-time-slot-id="${id}" style="display:inline-block;padding:6px 10px;border:1px solid #ddd;border-radius:9999px;background:#f8f8f8;margin:4px;font-size:12px;cursor:pointer;">`+
+                                                                           `${label}`+
+                                                                           `${id ? `<span class=\"slot-id\" style=\"margin-left:6px;color:\#888;font-size:11px;\">#${id}</span>` : ''}`+
+                                                                           `</span>`;
+                                                                }).join('');
+                                                                tsList.innerHTML = items;
+                                                                pricingElement.setAttribute('data-timeslots', JSON.stringify(slots));
+                                                                }
+                                                            } else {
+                                                                const tsList = pricingElement.querySelector('.timeslot-list');
+                                                                if (tsList) {
+                                                                    tsList.innerHTML = '<div class="no-data">No slots found.</div>';
+                                                                }
+                                                            }
+                                                        });
+                                                } else {
+                                                    availabilityBadge.innerHTML = 'Availability Unknown';
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error checking availability:', error);
+                                                availabilityBadge.innerHTML = 'Error';
+                                            });
                                         }
                                     } else {
                                         pricingElement.innerHTML = '<div class="no-data">No pricing data available for this transfer.</div>';
@@ -3213,100 +3384,157 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
         
         // Function to check availability for all transfers
         async function checkAllTransfersAvailability(tourOptionsData, tourId, contractId) {
-            if (!tourOptionsData || !tourOptionsData.result || !Array.isArray(tourOptionsData.result)) {
-                console.error('Invalid tour options data');
-                return;
+            // Build pairs (tourOptionId, transferId) from multiple possible shapes
+            let pairs = [];
+            if (tourOptionsData && Array.isArray(tourOptionsData.transfertime)) {
+                pairs = tourOptionsData.transfertime
+                    .filter(tt => tt && tt.transferId && tt.tourOptionId)
+                    .map(tt => ({ tourOptionId: parseInt(tt.tourOptionId), transferId: parseInt(tt.transferId) }));
+            } else if (tourOptionsData && Array.isArray(tourOptionsData.result)) {
+                pairs = tourOptionsData.result
+                    .filter(ro => ro && ro.transferId && ro.tourOptionId)
+                    .map(ro => ({ tourOptionId: parseInt(ro.tourOptionId), transferId: parseInt(ro.transferId) }));
+            } else {
+                // Fallback to DOM badges if API shape differs
+                document.querySelectorAll('.availability-badge').forEach(badge => {
+                    const tourOptionId = parseInt(badge.getAttribute('data-tour-option-id'));
+                    const transferId = parseInt(badge.getAttribute('data-transfer-id'));
+                    if (tourOptionId && transferId) pairs.push({ tourOptionId, transferId });
+                });
             }
-            
+
+            if (!pairs.length) {
+                console.warn('No transfers found to check availability.');
+                return [];
+            }
+
             // Get travel date from modal (if available) and convert to MM-DD-YYYY
             let travelDate = document.getElementById('modal-tour-date')?.textContent?.replace('Date: ', '') || '';
             if (travelDate && travelDate.includes('-')) {
                 const dateParts = travelDate.split('-');
                 if (dateParts.length === 3) {
-                    // Convert from YYYY-MM-DD to MM-DD-YYYY
                     travelDate = `${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}-${dateParts[0]}`; // MM-DD-YYYY
                 }
             }
-            
-            // Check availability for each transfer
-            const availabilityPromises = [];
-            
-            tourOptionsData.result.forEach(transferOption => {
-                if (transferOption.transferId && transferOption.tourOptionId) {
-                    const promise = checkAvailability(
-                        tourId,
-                        transferOption.tourOptionId,
-                        travelDate,
-                        transferOption.transferId,
-                        1, // adult
-                        0, // child
-                        0  // infant
-                    )
-                    .then(availabilityData => {
-                        // Update the availability badge for this transfer
-                        const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferOption.transferId}"]`);
-                        if (availabilityBadge) {
-                            if (availabilityData && availabilityData.isAvailable !== undefined) {
-                                if (availabilityData.isAvailable) {
-                                    availabilityBadge.innerHTML = `Available`;
-                                    availabilityBadge.classList.remove('unavailable');
-                                    
-                                    // Show Book button when available
-                                    const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
-                                    if (bookButton) {
-                                        bookButton.style.display = 'inline-block';
-                                    }
-                                } else {
-                                    availabilityBadge.innerHTML = `Unavailable`;
-                                    availabilityBadge.classList.add('unavailable');
-                                    
-                                    // Hide Book button when unavailable
-                                    const bookButton = availabilityBadge.closest('.availability-container').querySelector('.book-button');
-                                    if (bookButton) {
-                                        bookButton.style.display = 'none';
-                                    }
-                                }
-                                
-                                // Store API response data for tooltips
-                                availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
-                                availabilityBadge.setAttribute('data-request', JSON.stringify({
-                                    tourId,
-                                    tourOptionId: transferOption.tourOptionId,
-                                    travelDate,
-                                    transferId: transferOption.transferId,
-                                    adult: 1,
-                                    child: 0,
-                                    infant: 0,
-                                    contractId: 300
-                                }));
+
+            const availabilityPromises = pairs.map(({ tourOptionId, transferId }) => {
+                return checkAvailability(
+                    tourId,
+                    tourOptionId,
+                    travelDate,
+                    transferId,
+                    1,
+                    0,
+                    0
+                )
+                .then(availabilityData => {
+                    const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferId}"]`);
+                    if (availabilityBadge) {
+                        if (availabilityData && availabilityData.isAvailable !== undefined) {
+                            if (availabilityData.isAvailable) {
+                                availabilityBadge.innerHTML = `Available`;
+                                availabilityBadge.classList.remove('unavailable');
+                                const bookButton = availabilityBadge.closest('.availability-container')?.querySelector('.book-button');
+                                if (bookButton) bookButton.style.display = 'inline-block';
                             } else {
-                                availabilityBadge.innerHTML = 'Availability Unknown';
+                                availabilityBadge.innerHTML = `Unavailable`;
+                                availabilityBadge.classList.add('unavailable');
+                                const bookButton = availabilityBadge.closest('.availability-container')?.querySelector('.book-button');
+                                if (bookButton) bookButton.style.display = 'none';
                             }
+
+                            const reqJson = {
+                                tourId,
+                                tourOptionId,
+                                travelDate,
+                                transferId,
+                                adult: 1,
+                                child: 0,
+                                infant: 0,
+                                contractId: 300
+                            };
+                            availabilityBadge.setAttribute('data-response', JSON.stringify(availabilityData));
+                            availabilityBadge.setAttribute('data-request', JSON.stringify(reqJson));
+                            // Reflect request to adjacent info icon so tooltip shows details
+                            const infoBtn = availabilityBadge.closest('.availability-container')?.querySelector('.modal-info-icon');
+                            if (infoBtn) {
+                                infoBtn.setAttribute('data-request', JSON.stringify(reqJson));
+                            }
+                        } else {
+                            availabilityBadge.innerHTML = 'Availability Unknown';
                         }
-                        return availabilityData;
-                    })
-                    .catch(error => {
-                        console.error(`Error checking availability for transfer ${transferOption.transferId}:`, error);
-                        const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferOption.transferId}"]`);
-                        if (availabilityBadge) {
-                            availabilityBadge.innerHTML = 'Error';
-                        }
-                        return null;
-                    });
-                    
-                    availabilityPromises.push(promise);
-                }
+                    }
+                    return availabilityData;
+                })
+                .catch(error => {
+                    console.error(`Error checking availability for transfer ${transferId}:`, error);
+                    const availabilityBadge = document.querySelector(`.availability-badge[data-transfer-id="${transferId}"]`);
+                    if (availabilityBadge) {
+                        availabilityBadge.innerHTML = 'Error';
+                    }
+                    return null;
+                });
             });
-            
-            // Wait for all availability checks to complete
+
             return Promise.all(availabilityPromises);
         }
 
         // Book button event listener (dynamic data)
         document.addEventListener('click', function(e) {
+            // Handle time slot pill selection to prefill booking
+            const pill = e.target.classList.contains('timeslot-pill') ? e.target : e.target.closest && e.target.closest('.timeslot-pill');
+            if (pill && pill.classList && pill.classList.contains('timeslot-pill')) {
+                const transferItem = pill.closest('.transfer-time-item');
+                const pricingElement = transferItem?.querySelector('.transfer-pricing');
+                const bookBtn = transferItem?.querySelector('.book-button');
+                const label = pill.getAttribute('data-label') || pill.textContent.trim();
+                const tsId = pill.getAttribute('data-time-slot-id') || '';
+
+                // Visual selection state
+                const siblings = transferItem ? transferItem.querySelectorAll('.timeslot-pill') : [];
+                siblings.forEach(function(s){
+                    s.classList.remove('selected');
+                    s.style.background = '#f8f8f8';
+                    s.style.borderColor = '#ddd';
+                    s.style.color = '';
+                });
+                pill.classList.add('selected');
+                pill.style.background = '#e6f4ff';
+                pill.style.borderColor = '#3399ff';
+                pill.style.color = '#174f7a';
+
+                // Persist selection for booking
+                if (pricingElement) {
+                    pricingElement.setAttribute('data-selected-start-time', label);
+                    pricingElement.setAttribute('data-selected-time-slot-id', tsId);
+                }
+                if (bookBtn) {
+                    bookBtn.setAttribute('data-start-time', label);
+                    bookBtn.setAttribute('data-time-slot-id', tsId);
+                    // Hide any open modal tooltip before opening booking form
+                    try {
+                        const tooltipBox = document.getElementById('modal-tooltip-box');
+                        if (tooltipBox && tooltipBox.classList.contains('visible')) {
+                            tooltipBox.classList.remove('visible');
+                            tooltipBox.setAttribute('aria-hidden', 'true');
+                        }
+                    } catch {}
+                    // Trigger booking flow immediately when a pill is selected
+                    try { bookBtn.click(); } catch {}
+                }
+            }
+            
             if (e.target.classList.contains('book-button')) {
                 e.preventDefault();
                 e.stopPropagation();
+                // Ensure tooltip is closed so booking renders as lightbox, not inside tooltip
+                try {
+                    const tooltipBox = document.getElementById('modal-tooltip-box');
+                    if (tooltipBox && tooltipBox.classList.contains('visible')) {
+                        tooltipBox.classList.remove('visible');
+                        tooltipBox.setAttribute('aria-hidden', 'true');
+                    }
+                } catch {}
                 const tourId = parseInt(e.target.getAttribute('data-tour-id'));
                 const tourOptionId = parseInt(e.target.getAttribute('data-tour-option-id'));
                 const transferId = parseInt(e.target.getAttribute('data-transfer-id'));
@@ -3355,6 +3583,16 @@ $viewMode = isset($_GET['view']) ? $_GET['view'] : 'grid';
                         }
                     }
                 } catch {}
+
+                // If user selected a time slot pill, prefer it
+                const selectedStartFromBtn = e.target.getAttribute('data-start-time');
+                const selectedIdFromBtn = e.target.getAttribute('data-time-slot-id');
+                const selectedStartFromPricing = pricingElement?.getAttribute('data-selected-start-time');
+                const selectedIdFromPricing = pricingElement?.getAttribute('data-selected-time-slot-id');
+                const preferredStart = selectedStartFromBtn || selectedStartFromPricing || '';
+                const preferredId = selectedIdFromBtn || selectedIdFromPricing || '';
+                if (preferredStart) startTime = preferredStart;
+                if (preferredId) timeSlotId = preferredId;
                 
                 // Prefer API-provided finalAmount; fallback to computed total
                 let serviceTotal = 0;
